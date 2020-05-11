@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+/**
+ * Author: Rahul Aher
+ * Purpose: Use to hold the data for categories to push in DB
+ */
+
 const categorySchema = new mongoose.Schema({
     name: {
         type: String,

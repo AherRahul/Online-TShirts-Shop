@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
+/**
+ * Author: Rahul Aher
+ * 
+ */
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
