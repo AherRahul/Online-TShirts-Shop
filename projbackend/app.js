@@ -1,7 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
+const app = express();
+
+// DB Connection
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -12,11 +18,18 @@ mongoose.connect(process.env.DATABASE, {
     console.log("DB NOT CONNCETED..!!");
 })
 
-const app = express();
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
+
+
+// Initalizing Port
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
     res.send("T-shirt shop");
 });
 
+
+// Creating the server
 app.listen(port, () => console.log(`T-Shit Store app listening at http://localhost:${port}`));
