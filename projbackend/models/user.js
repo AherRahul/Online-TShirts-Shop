@@ -64,13 +64,13 @@ userSchema.virtual("password")
         return this._password;
     })
 
-userSchema.method = {
+userSchema.methods = {
     // TODO: Come here
-    authenticate = function(plainPassword) {
+    authenticate: function(plainPassword) {
         return this.securePassword(plainPassword) === this.encry_password;
     },
 
-    securePassword = function(plainPassword) {
+    securePassword: function(plainPassword) {
         // If password is null entered by user the mongo DB thorw and error as password field is required
         if (!plainPassword) return "";
 
