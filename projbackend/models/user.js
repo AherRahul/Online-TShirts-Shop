@@ -53,7 +53,8 @@ var userSchema = new mongoose.Schema({
  * Created a virtual field for password, take plain passswod by user and hashed it by using securedPassword function
  * Salt value is initialize in the function using UUID. 
  * UUID generate random and unique string which get appended to password password hashed value
- * */
+ * 
+ **/
 userSchema.virtual("password")
     .set(function(password) {
         this._password = password;
