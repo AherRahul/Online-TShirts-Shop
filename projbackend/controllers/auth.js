@@ -1,6 +1,17 @@
 const User = require("../models/user");
+const { check, validationResult } = require('express-validator');
 
 exports.SignUp = (req, res) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            error: errors.array()[0].msg,
+            params: errors.array()[0].param
+        });
+    }
+
     const user = new User(req.body);
     user.save((error, user) => {
         if (error) {
