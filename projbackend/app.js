@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
+// My Routes
 const authRoutes = require("./routes/auth");
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -30,6 +33,7 @@ const port = process.env.PORT || 3000;
 
 // Routes
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 // Creating the server
 app.listen(port, () => console.log(`T-Shit Store app listening at http://localhost:${port}`));
