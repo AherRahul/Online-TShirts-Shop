@@ -26,7 +26,7 @@ router.get('/user/:userId', isSignedIn, isAuthenticated, getUser);
  * Middlewares: isSignedIn, isAdmin
  */
 // http://localhost:3030/api/users
-router.get('/users', isSignedIn, isAdmin, getAllBasicUser);
+router.get('/users/:userId', isSignedIn, isAuthenticated, isAdmin, getAllBasicUser);
 
 /**
  * PUT REQUEST

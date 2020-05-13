@@ -67,7 +67,7 @@ exports.SignIn = (req, res) => {
         }
 
         // Creating a TOKEN
-        const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+        const token = jwt.sign({ _id: user._id, role: user.role }, process.env.SECRET);
 
         // Put TOKEN in Cookie
         res.cookie("token", token, { expire: new Date() + 9999 });
@@ -99,7 +99,7 @@ exports.isSignedIn = expressJwt({
 // Custom Middleware
 // Authentication Middleware
 exports.isAuthenticated = (req, res, next) => {
-    var checker = req.profile && req.auth && req.profile._id == req.auth._id;
+    let checker = req.profile && req.auth && req.profile._id == req.auth._id;
 
     if (!checker) {
         return res.status(403).json({
@@ -112,8 +112,9 @@ exports.isAuthenticated = (req, res, next) => {
 
 // Admin Middleware
 exports.isAdmin = (req, res, next) => {
+
     if (req.auth.role === 0) {
-        res.status(403).json({
+        return res.status(403).json({
             error: "User not have Admin privileges. ACCESS DENIED"
         });
     }

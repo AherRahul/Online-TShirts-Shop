@@ -70,7 +70,7 @@ exports.updateUser = (req, res) => {
     });
 };
 
-
+// User Purchase list 
 exports.userPurchaseList = (req, res) => {
     Order.find({ user: req.profile._id })
         .populate("user", "_id name")
