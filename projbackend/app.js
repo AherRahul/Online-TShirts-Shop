@@ -9,6 +9,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const userRoutes = require('./routes/user');
 const categoriesRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
 
 const app = express();
 
@@ -36,6 +37,7 @@ const port = process.env.PORT || 3000;
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoriesRoutes);
+app.use('/api', productRoutes);
 
 // Creating the server
 app.listen(port, () => console.log(`T-Shit Store app listening at http://localhost:${port}`));

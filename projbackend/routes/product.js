@@ -1,0 +1,31 @@
+const express = require('express');
+const router = express.Router();
+const { getProductById, getProduct, getAllProducts, getProductsByCategory, createProduct } = require('../controllers/product');
+const { isAdmin, isAuthenticated, isSignedIn } = require('../controllers/auth');
+const { getUserById } = require('../controllers/user');
+const { getCategoryById } = require('../controllers/category');
+
+// PARAM
+// product by Id
+router.param('productId', getProductById);
+// category by id
+router.param('categoryId', getCategoryById);
+// user by Id
+router.param('userId', getUserById);
+
+
+
+// Products Rotes
+
+// Create
+router.post('/product/:userId', isSignedIn, isAuthenticated, isAdmin, createProduct);
+
+// READ
+// Single product by ID
+router.get('/product/:productId', getProduct);
+// Get All Products
+router.get('/products', getAllProducts);
+// Get products by category
+router.get('/products/:categoryId', getProductsByCategory);
+
+module.exports = router;

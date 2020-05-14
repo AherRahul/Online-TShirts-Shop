@@ -20,7 +20,6 @@ const productSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        maxlength: 32,
         required: true,
         trim: true
     },
@@ -30,15 +29,15 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     stock: {
-        type: Number
+        type: Number,
+        default: 0
     },
     sold: {
         type: Number,
         default: 0
     },
     photo: {
-        data: Buffer,
-        contentType: String
+        type: Map
     }
 }, { timestamps: true });
 
