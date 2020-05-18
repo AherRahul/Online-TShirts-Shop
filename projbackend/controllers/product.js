@@ -4,6 +4,7 @@ const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
 const { check, validationResult } = require('express-validator');
+const User = require('../models/user');
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id).populate("category").exec((error, product) => {
@@ -13,8 +14,8 @@ exports.getProductById = (req, res, next, id) => {
             });
         }
 
-        var { name, description, price, category, stock, sold, photo } = product;
-        req.product = { name, description, price, category, stock, sold, photo };
+        var { _id, name, description, price, category, stock, sold, photo } = product;
+        req.product = { _id, name, description, price, category, stock, sold, photo };
         next();
     });
 };
@@ -56,7 +57,6 @@ exports.getProductsByCategory = (req, res) => {
     });
 
 };
-
 
 exports.createProduct = (req, res) => {
     var form = new formidable.IncomingForm();
@@ -120,7 +120,8 @@ exports.createProduct = (req, res) => {
                 fs.unlinkSync(path)
 
                 // Mapping the Cloudinary response to product photo field
-                product.photo = image;
+                var { asset_id, public_id, signature, format, url, original_filename } = image;
+                product.photo = { asset_id, public_id, signature, format, url, original_filename };
 
                 // Saving product into DB
                 product.save((error, product) => {
@@ -136,3 +137,34 @@ exports.createProduct = (req, res) => {
         )
     });
 };
+
+exports.updateProduct = (req, res) => {
+    if (req.product) {
+        Product.findByIdAndUpdate({ _id: req.product._id }, { $set: req.body }, { new: true, useFindAndModify: false }, (error, product) => {
+            if (error || !product) {
+                return res.status(400).json({
+                    error: "Error while updating product"
+                });
+            }
+
+            var { _id, name, description, price, category, stock, sold, photo } = product;
+            return res.json({ _id, name, description, price, category, stock, sold, photo });
+        })
+    }
+}
+
+exports.deleteProduct = (req, res) => {
+    if (req.product) {
+        Product.deleteOne({ "_id": req.product._id }).exec((error, output) => {
+            if (error || output.deletedCount != 1) {
+                return res.status(400).json({
+                    error: "Error while deleting product"
+                });
+            }
+
+            return res.json({
+                message: "Product Deleted..!"
+            })
+        })
+    }
+}
