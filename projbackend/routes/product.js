@@ -14,9 +14,7 @@ router.param('categoryId', getCategoryById);
 router.param('userId', getUserById);
 
 
-
 // Products Rotes
-
 // Create
 router.post('/product/:userId', isSignedIn, isAuthenticated, isAdmin, createProduct);
 

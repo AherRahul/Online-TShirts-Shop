@@ -139,18 +139,97 @@ exports.createProduct = (req, res) => {
 };
 
 exports.updateProduct = (req, res) => {
-    if (req.product) {
-        Product.findByIdAndUpdate({ _id: req.product._id }, { $set: req.body }, { new: true, useFindAndModify: false }, (error, product) => {
-            if (error || !product) {
+
+    var form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    var product;
+
+    form.parse(req, (error, fields, file) => {
+
+        if (error) {
+            return res.status(400).json({
+                error: "Problem With Image"
+            });
+        }
+
+        product = req.product;
+        product = _.extend(product, fields);
+
+        if (file.photo) {
+            if (file.photo.size > 3000000) {
                 return res.status(400).json({
-                    error: "Error while updating product"
+                    error: "File size greater than 3Mb..!"
                 });
             }
+        }
+    });
 
-            var { _id, name, description, price, category, stock, sold, photo } = product;
-            return res.json({ _id, name, description, price, category, stock, sold, photo });
-        })
-    }
+
+
+
+    // if (file.name === req.product.photo.original_filename + '.' + req.product.photo.format) {
+
+    // }
+
+
+
+    form.on('fileBegin', function(name, file) {
+        console.log(file.name);
+        console.log(req.product);
+        console.log(req.product.photo);
+
+
+        var test = req.product.photo.original_filename + '.' + req.product.photo.format;
+        console.log(test);
+
+
+
+        file.path = __dirname + '\\uploads\\' + file.name;
+    });
+
+    return res.status(200).json({
+        message: "test mode on"
+    });
+
+    form.on('file', function(name, file) {
+        // SEND FILE TO CLOUDINARY
+        const cloudinary = require('cloudinary').v2
+        cloudinary.config({
+            cloud_name: process.env.CLOUD_NAME,
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        const path = file.path;
+        const uniqueFilename = new Date().toISOString()
+
+        cloudinary.uploader.upload(path, { public_id: `T-shirts/Products/${uniqueFilename}`, tags: `T-shirts/Products` },
+            // directory and tags are optional
+            function(err, image) {
+                if (err) {
+                    return res.send(err)
+                }
+
+                // remove file from server
+                fs.unlinkSync(path)
+
+                // Mapping the Cloudinary response to product photo field
+                var { asset_id, public_id, signature, format, url, original_filename } = image;
+                product.photo = { asset_id, public_id, signature, format, url, original_filename };
+
+                // Saving product into DB
+                Product.findByIdAndUpdate({ _id: req.product._id }, { $set: product }, { new: true, useFindAndModify: false }, (error, product) => {
+                    if (error || !product) {
+                        return res.status(400).json({
+                            error: "Product Updation FAILED"
+                        });
+                    }
+                    return res.json(product);
+                });
+            }
+        )
+    });
 }
 
 exports.deleteProduct = (req, res) => {
