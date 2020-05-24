@@ -3,8 +3,6 @@ const Product = require('../models/product');
 const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
-const { check, validationResult } = require('express-validator');
-const User = require('../models/user');
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id).populate("category").exec((error, product) => {
@@ -165,31 +163,10 @@ exports.updateProduct = (req, res) => {
         }
     });
 
-
-
-
-    // if (file.name === req.product.photo.original_filename + '.' + req.product.photo.format) {
-
-    // }
-
-
-
     form.on('fileBegin', function(name, file) {
-        console.log(file.name);
-        console.log(req.product);
-        console.log(req.product.photo);
-
-
         var test = req.product.photo.original_filename + '.' + req.product.photo.format;
-        console.log(test);
-
-
 
         file.path = __dirname + '\\uploads\\' + file.name;
-    });
-
-    return res.status(200).json({
-        message: "test mode on"
     });
 
     form.on('file', function(name, file) {
@@ -246,4 +223,47 @@ exports.deleteProduct = (req, res) => {
             })
         })
     }
+}
+
+exports.getAllProductsForList = (req, res) => {
+    let limit = req.query.limit ? parseInt(req.query.limit) : 8;
+    let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+
+    Product.find()
+        .populate("category")
+        .sort([
+            [sortBy, "asc"]
+        ])
+        .limit(limit)
+        .exec((error, products) => {
+            if (error || !products) {
+                return res.status(400).json({
+                    error: "No Product Found"
+                });
+            }
+
+            return res.json(products);
+        });
+}
+
+exports.updateStock = (req, res, next) {
+
+    let myOperations = req.body.order.products.map(prod => {
+        return {
+            updateOne: {
+                filter: { _id: prod._id },
+                update: { $inc: { stock: -prod.count, sold: +prod.count } }
+            }
+        };
+    });
+
+    Product.bulkWrite(myOperations, {}, (error, products) => {
+        if (error || !products) {
+            return res.status(400).json({
+                error: 'Error while updating stock'
+            });
+        }
+
+        next();
+    });
 }
