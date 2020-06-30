@@ -84,7 +84,7 @@ exports.updateCategory = (req, res) => {
     Category.findByIdAndUpdate({ _id: req.category._id }, { $set: req.body }, { new: true, useFindAndModify: false }, (error, category) => {
         if (error || !category) {
             return res.status(400).json({
-                error: "Category Updation FAILED"
+                error: "Category Updating FAILED"
             });
         }
 

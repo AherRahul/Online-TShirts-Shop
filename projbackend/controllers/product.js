@@ -246,6 +246,18 @@ exports.getAllProductsForList = (req, res) => {
         });
 }
 
+exports.getAllUniqueCategories = (req, res) => {
+    Product.distinct("category", {}, (err, category) => {
+        if (err || !category) {
+            return res.status(400).json({
+                error: "No Category Found"
+            });
+        }
+
+        return res.json(category);
+    });
+}
+
 exports.updateStock = (req, res, next) => {
     let myOperations = req.body.order.products.map(prod => {
         return {
@@ -262,8 +274,6 @@ exports.updateStock = (req, res, next) => {
                 error: 'Error while updating stock'
             });
         }
-
-        req.products = products;
         next();
     });
 }
