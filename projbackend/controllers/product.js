@@ -246,8 +246,7 @@ exports.getAllProductsForList = (req, res) => {
         });
 }
 
-exports.updateStock = (req, res, next) {
-
+exports.updateStock = (req, res, next) => {
     let myOperations = req.body.order.products.map(prod => {
         return {
             updateOne: {
@@ -264,6 +263,7 @@ exports.updateStock = (req, res, next) {
             });
         }
 
+        req.products = products;
         next();
     });
 }
