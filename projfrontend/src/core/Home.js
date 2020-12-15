@@ -1,9 +1,15 @@
-import React from 'react'
+import React from 'react';
+import '../styles.css';
+import { API } from '../backend.js';
+import Base from './Base';
 
 export default function Home() {
+    
+    //console.log("API is", API);
+
     return (
-        <div>
-            <h1>Hello Front-End</h1>
-        </div>
+        <Base title="Home Page">
+            
+        </Base>
     );
 }
