@@ -3,13 +3,13 @@ import React, { Children } from 'react'
 const Base = ({
     title = "My Title",
     descriptions = "My Description",
-    ClassName = "bg-dark text-white p-4",
+    ClassName = "bg-light p-4",
     children
 }) => {
     return (
         <div>
-            <div className="container-fluid">
-                <div className="jumbotron bg-dark text-white text-center">
+            <div className="container-fluid p-0">
+                <div className="jumbotron bg-light text-center">
                     <h2 className="display-4">{title}</h2>
                     <p className="lead"> {descriptions} </p>
                 </div>
@@ -18,8 +18,10 @@ const Base = ({
                 </div>
             </div> 
 
-            <footer className="footer bg-dark mt-auto py-3">
-                <div className="container-fluid bg-success text-white text-center">
+            <hr />
+
+            <footer className="footer bg-light mt-auto py-3 p-0">
+                <div className="container-fluid bg-light text-center p-3">
                     <h4>If u got any question, feel free to ask</h4>
                     <button className="btn btn-warning btn-lg">Contact Us</button>
                 </div>

@@ -9,7 +9,11 @@ export default function Home() {
 
     return (
         <Base title="Home Page">
-            
+            <div className="row">
+                <div className="">
+
+                </div>
+            </div>
         </Base>
     );
 }

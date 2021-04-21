@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;500&display=swap');
+
 .btn,
 .jumbotron,
 .nav :hover {
@@ -5,5 +7,6 @@
 }
 
 body {
-  background: #343a40;
+  font-family: 'Roboto Slab', serif;
+  background: #e9e9e9;
 }
