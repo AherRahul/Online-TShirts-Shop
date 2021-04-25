@@ -12,7 +12,7 @@ const Base = ({
             <Menu></Menu>
             
             <div className="container-fluid p-0">
-                <div className="jumbotron bg-light text-center">
+                <div className="py-3 bg-light text-center">
                     <h2 className="display-4">{title}</h2>
                     <p className="lead"> {descriptions} </p>
                 </div>
