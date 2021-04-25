@@ -1,5 +1,6 @@
-import React from 'react';
-import { Link,  withRouter } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link,  withRouter, Redirect } from 'react-router-dom';
+import { signout, isAuthenticated } from '../auth/helper';
 
 
 const currentTab = (history, path) => {
@@ -48,16 +49,34 @@ const Menu = (
                                 Admin Dashboard
                             </Link>
                         </li>
-                        <li className={currentTab(history, "/sign-up")}>
-                            <Link className="nav-link" to="/sign-up">
-                                Sign Up
-                            </Link>
-                        </li>
-                        <li className={currentTab(history, "/sign-in")}>
-                            <Link className="nav-link" to="/sign-in">
-                                Sign In
-                            </Link>
-                        </li>
+
+                        {!isAuthenticated() && (
+                            <Fragment>
+                                <li className={currentTab(history, "/sign-up")}>
+                                    <Link className="nav-link" to="/sign-up">
+                                        Sign Up
+                                    </Link>
+                                </li>
+                                <li className={currentTab(history, "/sign-in")}>
+                                    <Link className="nav-link" to="/sign-in">
+                                        Sign In
+                                    </Link>
+                                </li>
+                            </Fragment>
+                        )}
+
+                        {isAuthenticated() && (
+                            <li className="nav-item">
+                                <span className="nav-link text-warning" onClick={ () => {
+                                    signout(() => {
+                                        history.push("/");
+                                        return <Redirect to="/" />
+                                    })
+                                }} >
+                                    Signout
+                                </span>
+                            </li>
+                        )}
                     </ul> 
                 </div>
             </nav>
